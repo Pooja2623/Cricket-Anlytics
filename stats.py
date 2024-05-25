@@ -1,10 +1,10 @@
 import streamlit as st
 import pandas as pd
 
-# Load IPL data
+# Load IPL data from xlsb
 @st.cache_data
 def load_data():
-    return pd.read_csv('ball_by_ball_ipl.csv')
+    return pd.read_excel('ball_by_ball_ipl.xlsb', engine='pyxlsb')
 
 data = load_data()
 
@@ -73,6 +73,11 @@ if st.button("Compare"):
     st.write(f"- Times Dismissed: {stats['batter_to_bowler']['dismissals_against']}")
     st.write(f"- Batting Average: {stats['batter_to_bowler']['batting_avg']}")
 
+    # Save stats to .xlsb file
+    stats_df = pd.DataFrame(stats)
+    stats_file_path = "player_comparison_stats.xlsb"
+    stats_df.to_excel(stats_file_path, engine="pyxlsb", index=False)
+    st.write(f"Statistics saved to {stats_file_path} successfully.")
+
 if __name__ == "__main__":
     st.write("Streamlit app to compare IPL players.")
-
